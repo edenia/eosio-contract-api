@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: atomicassets-api-server
+  name: atomicassets-api-server
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: atomicassets-api-server
+  template:
+    metadata:
+      labels:
+        app: atomicassets-api-server
+    spec:
+      containers:
+      - image: ghcr.io/edenia/atomicassets-api-dev:latest
+        imagePullPolicy: "Always"
+        name: atomicassets-api-server
+        ports:
+        - containerPort: 9000
+        args:
+        - "yarn"
+        - "run"
+        - "start:server"
+      restartPolicy: Always

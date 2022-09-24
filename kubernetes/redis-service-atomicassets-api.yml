@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: redis-atomicassets-api
+  name: redis-atomicassets-api
+spec:
+  ports:
+  - name: http
+    port: 6379
+    targetPort: 6379
+    protocol: TCP
+  selector:
+    app: redis-atomicassets-api

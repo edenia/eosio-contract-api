@@ -1,0 +1,59 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  labels:
+    app: redis-atomicassets-api
+  name: redis-atomicassets-api
+spec:
+  serviceName: redis-atomicassets-api
+  replicas: 1
+  selector:
+    matchLabels:
+      app: redis-atomicassets-api
+  template:
+    metadata:
+      labels:
+        app: redis-atomicassets-api
+    spec:
+      containers:
+      - image: redis:latest
+        imagePullPolicy: "Always"
+        name: redis-atomicassets-api
+        env:
+        - name: MASTER
+          value: "true"
+        resources:
+          requests:
+            memory: "1G"
+            cpu: "0.5"
+          limits:
+            memory: "3G"
+            cpu: "1"
+        envFrom:
+        ports:
+        - protocol: TCP   
+          containerPort: 6379
+        volumeMounts:
+        - mountPath: /redis-master-data
+          name: data
+        - mountPath: /redis-master
+          name: config
+      volumes:
+      - name: data
+        emptyDir: {}
+      - name: config
+        configMap:
+          name: redis-config-atomicassets-api
+          items:
+          - key: redis-config
+            path: redis.conf
+      restartPolicy: Always
+  volumeClaimTemplates:
+    - metadata:
+        name: redis-atomicassets-api
+      spec:
+        accessModes: ["ReadWriteOnce"]
+        storageClassName: atomicassets-api-storage
+        resources:
+          requests:
+            storage: 100Gi

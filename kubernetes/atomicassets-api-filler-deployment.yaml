@@ -1,0 +1,25 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: atomicassets-api-filler
+  name: atomicassets-api-filler
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: atomicassets-api-filler
+  template:
+    metadata:
+      labels:
+        app: atomicassets-api-filler
+    spec:
+      containers:
+      - image: ghcr.io/edenia/atomicassets-api-dev:latest
+        imagePullPolicy: "Always"
+        name: atomicassets-api-filler
+        args:
+        - "yarn"
+        - "run"
+        - "start:filler"
+      restartPolicy: Always

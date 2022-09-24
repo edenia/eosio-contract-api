@@ -1,0 +1,56 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  labels:
+    app: postgres-atomicassets-api
+  name: postgres-atomicassets-api
+spec:
+  serviceName: postgres-atomicassets-api
+  replicas: 1
+  selector:
+    matchLabels:
+      app: postgres-atomicassets-api
+  template:
+    metadata:
+      labels:
+        app: postgres-atomicassets-api
+    spec:
+      securityContext:
+        runAsUser: 999
+        fsGroup: 999
+      containers:
+      - image: postgres:latest
+        imagePullPolicy: "Always"
+        name: postgres-atomicassets-api
+        env:
+        - name: POSTGRES_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: postgres-atomicassets-api-secret
+              key: POSTGRES_PASSWORD
+        - name: PGDATA
+          value: "/var/lib/postgresql/data/pgdata"
+        resources:
+          requests:
+            memory: "1G"
+            cpu: "0.5"
+          limits:
+            memory: "3G"
+            cpu: "1"
+        envFrom:
+        ports:
+        - protocol: TCP   
+          containerPort: 5432
+        volumeMounts:
+        - mountPath: /var/lib/postgresql/data
+          name: postgres-atomicassets-api
+      restartPolicy: Always
+  volumeClaimTemplates:
+    - metadata:
+        name: postgres-atomicassets-api
+      spec:
+        accessModes: ["ReadWriteOnce"]
+        storageClassName: atomicassets-api-storage
+        resources:
+          requests:
+            storage: 100Gi
