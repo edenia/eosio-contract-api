@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: postgres-atomicassets-api
+  name: postgres-atomicassets-api
+spec:
+  ports:
+  - name: http
+    port: 5432
+    targetPort: 5432
+    protocol: TCP
+  selector:
+    app: postgres-atomicassets-api
