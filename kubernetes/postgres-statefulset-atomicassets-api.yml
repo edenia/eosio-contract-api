@@ -19,7 +19,7 @@ spec:
         runAsUser: 999
         fsGroup: 999
       containers:
-      - image: postgres:latest
+      - image: postgres:14.5
         imagePullPolicy: "Always"
         name: postgres-atomicassets-api
         env:
