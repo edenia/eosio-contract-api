@@ -38,7 +38,7 @@ services:
       - eosio-contract-api
   eosio-contract-api-postgres:
     container_name: eosio-contract-api-postgres
-    image: postgres:13
+    image: postgres:13.10
     restart: on-failure
     shm_size: '8gb'
     environment:
